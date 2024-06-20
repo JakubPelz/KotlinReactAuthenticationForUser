@@ -37,3 +37,4 @@ TODO:
     soubor s proměnými automaticky generovaných ze souboru
  3) udělat role (admin, user)
  4) debugovat použití loggerFactory
+ 5) nasadit aplikaci do dockeru
