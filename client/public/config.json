@@ -1,0 +1,11 @@
+{
+  "name": "client-react-test",
+  "api": {
+    "restURL": "http://localhost:8080/",
+    "timeout": 60000
+  },
+  "variables": {
+    "NOTIFICATION_TIMEOUT": 4.5,
+    "ERROR_NOTIFICATION_TIMEOUT": 10
+  }
+}
