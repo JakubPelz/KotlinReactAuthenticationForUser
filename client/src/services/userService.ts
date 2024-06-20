@@ -70,3 +70,10 @@ export const putUpdateUserById = async (id: number, data: IUpdatePerson) => {
         data: data
     }).then((resp: AxiosResponse) => resp.data);
 };
+
+export const deleteUserById = async (id: number) => {
+    return await axios({
+        method: 'DELETE',
+        url: apiPaths.USERS + id
+    }).then((resp: AxiosResponse) => resp.data);
+};

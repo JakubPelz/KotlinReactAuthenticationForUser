@@ -21,5 +21,11 @@ export const czech = {
     ZRUSIT: 'zrušit',
     UPOZORNENI: 'Upozornění',
     LOGOUT_CONTENT: 'Byli jste odhlášeni z aplikace',
+    ID: 'ID',
+    ALL_USERS: 'Všichni uživatelé',
+    DELETE_USER: 'Smazat uživatele',
+    CONFIRM_DELETE_TITLE: 'Smazat uživatele',
+    CONFIRM_DELETE_CONTENT: 'Smazaní uživatele je nevratný proces.',
+
     '': ''
 };

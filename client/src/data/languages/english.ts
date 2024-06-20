@@ -1,3 +1,31 @@
 export const english = {
-    VALIDATE_NAME: 'Please input your Username!'
+    CHYBA: 'Error',
+    PRIHLASIT_SE: 'Login',
+    REGISTRACE: 'Registration',
+    LOGIN_DONT_HAVE_ACC: 'Create an account',
+    LOGIN_HAVE_ACC: 'Go to login',
+    VALIDATE_NAME: 'Please enter your name!',
+    VALIDATE_USERNAME: 'Please enter your username!',
+    VALIDATE_PASSWORD: 'Please enter your password!',
+    VALIDATE_CHECK_PASSWORD: 'Please enter your confirmation password!',
+    UZIVATELSKE_JMENO: 'Username',
+    ZPET: 'Back',
+    POTVRDIT: 'Confirm',
+    PASSWORD: 'Password',
+    CHECK_PASSWORD: 'Confirm password',
+    USERNAME: 'Username',
+    NAME: 'Name',
+    PASSWORD_NOT_MATCH: 'Passwords do not match!',
+    LOGIN: 'Login',
+    EDIT_PROFILE: 'Edit profile',
+    ZRUSIT: 'Cancel',
+    UPOZORNENI: 'Notice',
+    LOGOUT_CONTENT: 'You have been logged out of the application',
+    ID: 'ID',
+    ALL_USERS: 'All users',
+    DELETE_USER: 'Delete User',
+    CONFIRM_DELETE_TITLE: 'Delete User',
+    CONFIRM_DELETE_CONTENT: 'Deleting the user is an irreversible process.',
+
+    '': ''
 };

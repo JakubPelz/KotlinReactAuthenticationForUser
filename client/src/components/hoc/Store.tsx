@@ -2,10 +2,12 @@ import React, { Dispatch, SetStateAction, createContext, useState } from 'react'
 
 import { ILoggedUser } from 'services/userService';
 
+import { ELanguageType } from 'enums/languageType';
+
 // Sem vkladat jednotlive casti store, napr. token, language, nactena data z API ktera budou globalni pro vsechny
 export interface IStore {
     token: string | null;
-    language: 'cz' | 'en';
+    language: ELanguageType;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     globalConfig: any | null;
     loggedUser: ILoggedUser | null;
@@ -25,7 +27,7 @@ export type IStoreKeys = keyof IStore;
 // defaultni hodnota globalniho store, prozatim {}
 export const defaultStoreState: IStore = {
     token: null,
-    language: 'cz',
+    language: ELanguageType.CZ,
     globalConfig: null,
     loggedUser: null
 };

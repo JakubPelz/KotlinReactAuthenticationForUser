@@ -7,6 +7,7 @@ import { useIdleTimer } from 'react-idle-timer';
 import { Outlet } from 'react-router-dom';
 
 import NotificationComponent from 'components/atoms/NotificationComponent';
+import Footer from 'components/molecules/Footer';
 
 import { useGlobalStore } from 'hooks/useGlobalStore';
 import useLocalLogout from 'hooks/useLocalLogout';
@@ -81,7 +82,6 @@ export const Authorization: React.FC = () => {
     // pokud není access token udělá refresh
     useEffect(() => {
         if (!token && !localToken.current && globalConfig) {
-            console.log('provola se refresh funkce');
             refreshTokens();
         } else if (!sessionStorage.getItem('refreshToken') && !token) {
             setTimeout(() => {
@@ -197,5 +197,10 @@ export const Authorization: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return <Outlet />;
+    return (
+        <>
+            <Outlet />
+            <Footer />
+        </>
+    );
 };

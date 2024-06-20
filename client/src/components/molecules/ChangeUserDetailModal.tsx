@@ -88,7 +88,7 @@ const ChangeUserDetailModal: React.FC<IChangeUserDetailModal> = ({ setAllUsers, 
                     marginRight: '10px'
                 }}
             >
-                Edit Profile
+                {translateText('EDIT_PROFILE')}
             </Button>
 
             <Modal title={translateText('EDIT_PROFILE')} open={open} footer={null} onCancel={handleCancel}>

@@ -1,5 +1,6 @@
-import { LogoutOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { DeleteOutlined, ExclamationCircleOutlined, LogoutOutlined } from '@ant-design/icons';
+import { Button, Modal, Table } from 'antd';
+import { ColumnsType } from 'antd/lib/table';
 import { AxiosError } from 'axios';
 import React, { useEffect, useState } from 'react';
 
@@ -8,8 +9,9 @@ import ChangeUserDetailModal from 'components/molecules/ChangeUserDetailModal';
 import { useGlobalStore } from 'hooks/useGlobalStore';
 import useLocalLogout from 'hooks/useLocalLogout';
 import useSetStore from 'hooks/useSetStore';
+import useTranslateText from 'hooks/useTranslateText';
 
-import { IUser, getUserFromToken, getUsers } from 'services/userService';
+import { IUser, deleteUserById, getUserFromToken, getUsers } from 'services/userService';
 
 const containerStyle: React.CSSProperties = {
     display: 'flex',
@@ -43,17 +45,11 @@ const userListStyle: React.CSSProperties = {
     margin: '0 auto'
 };
 
-const userStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '10px 0',
-    borderBottom: '1px solid #eee'
-};
-
 const MainPage = () => {
     const { loggedUser, token } = useGlobalStore();
     const [allUsers, setAllUsers] = useState<IUser[]>([]);
     const { localLogout } = useLocalLogout();
+    const { translateText } = useTranslateText();
     const { setStore } = useSetStore();
 
     useEffect(() => {
@@ -79,11 +75,70 @@ const MainPage = () => {
         localLogout();
     };
 
+    const handleDelete = (userId: number) => {
+        deleteUserById(userId)
+            .then(() => {
+                getUsers()
+                    .then(users => {
+                        setAllUsers(users);
+                    })
+                    .catch((err: AxiosError) => {
+                        console.log('JPE err', err);
+                    });
+            })
+            .catch((err: AxiosError) => {
+                console.log('JPE err', err);
+            });
+    };
+
+    const confirmDelete = (userId: number) => {
+        Modal.confirm({
+            title: translateText('CONFIRM_DELETE_TITLE'),
+            icon: <ExclamationCircleOutlined />,
+            content: translateText('CONFIRM_DELETE_CONTENT'),
+            okText: translateText('POTVRDIT'),
+            cancelText: translateText('ZRUSIT'),
+            onOk() {
+                handleDelete(userId);
+            }
+        });
+    };
+
+    const columns: ColumnsType<IUser> = [
+        {
+            title: translateText('ID'),
+            dataIndex: 'id',
+            key: 'id',
+            align: 'center' as 'center'
+        },
+        {
+            title: translateText('NAME'),
+            dataIndex: 'name',
+            key: 'name',
+            align: 'center' as 'center'
+        },
+        {
+            title: translateText('USERNAME'),
+            dataIndex: 'username',
+            key: 'username',
+            align: 'center' as 'center'
+        },
+        {
+            title: translateText('DELETE_USER'),
+            key: 'action',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            render: (_: any, record: IUser) => (
+                <Button type="text" icon={<DeleteOutlined />} onClick={() => confirmDelete(record.id)} />
+            ),
+            align: 'center' as 'center'
+        }
+    ];
+
     return (
         <div style={containerStyle}>
             <header style={headerStyle}>
                 <div>
-                    Username: <strong>{loggedUser?.name}</strong>
+                    {translateText('USERNAME')}: <strong>{loggedUser?.name}</strong>
                 </div>
                 <div>
                     {loggedUser && <ChangeUserDetailModal setAllUsers={setAllUsers} loggedUser={loggedUser} />}
@@ -91,13 +146,16 @@ const MainPage = () => {
                 </div>
             </header>
             <div style={userListStyle}>
-                <h2>All Users</h2>
-                {allUsers.map(user => (
-                    <div key={user.id} style={userStyle}>
-                        <p>ID: {user.id}</p>
-                        <p>Name: {user.name}</p>
-                    </div>
-                ))}
+                <h2>{translateText('ALL_USERS')}</h2>
+                <Table
+                    columns={columns}
+                    dataSource={allUsers}
+                    rowKey="id"
+                    pagination={false}
+                    style={{
+                        textAlign: 'center'
+                    }}
+                />
             </div>
         </div>
     );
