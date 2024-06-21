@@ -138,10 +138,12 @@ const MainPage = () => {
         <div style={containerStyle}>
             <header style={headerStyle}>
                 <div>
-                    {translateText('USERNAME')}: <strong>{loggedUser?.name}</strong>
+                    {translateText('NAME')}: <strong>{loggedUser?.name}</strong>
                 </div>
                 <div>
-                    {loggedUser && <ChangeUserDetailModal setAllUsers={setAllUsers} loggedUser={loggedUser} />}
+                    {loggedUser && token && (
+                        <ChangeUserDetailModal setAllUsers={setAllUsers} loggedUser={loggedUser} token={token} />
+                    )}
                     <Button onClick={handleLogout} icon={<LogoutOutlined />} />
                 </div>
             </header>

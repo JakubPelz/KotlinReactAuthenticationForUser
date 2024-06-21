@@ -10,7 +10,14 @@ import InputFieldComponent from 'components/atoms/InputFieldComponent';
 import useSetStore from 'hooks/useSetStore';
 import useTranslateText from 'hooks/useTranslateText';
 
-import { ILoggedUser, IUpdatePerson, IUser, getUserById, getUsers, putUpdateUserById } from 'services/userService';
+import {
+    ILoggedUser,
+    IUpdatePerson,
+    IUser,
+    getUserByUsername,
+    getUsers,
+    putUpdateUserById
+} from 'services/userService';
 
 import { EErrorCodes } from 'enums/errorCodes';
 
@@ -20,8 +27,9 @@ import UsernameInputComponent from './UsernameInputComponent';
 interface IChangeUserDetailModal {
     setAllUsers: (allUser: IUser[]) => void;
     loggedUser: ILoggedUser;
+    token: string;
 }
-const ChangeUserDetailModal: React.FC<IChangeUserDetailModal> = ({ setAllUsers, loggedUser }) => {
+const ChangeUserDetailModal: React.FC<IChangeUserDetailModal> = ({ setAllUsers, loggedUser, token }) => {
     const { translateText } = useTranslateText();
     const [open, setOpen] = useState(false);
     const [shake, setShake] = useState(false);
@@ -51,7 +59,7 @@ const ChangeUserDetailModal: React.FC<IChangeUserDetailModal> = ({ setAllUsers, 
         };
         putUpdateUserById(loggedUser.id, data)
             .then(() => {
-                getUserById(loggedUser?.id)
+                getUserByUsername(values.username, token)
                     .then(user => {
                         setStore('loggedUser', user);
                     })

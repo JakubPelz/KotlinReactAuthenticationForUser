@@ -108,8 +108,8 @@ class UserController(
     @GetMapping("/current")
     fun getCurrentUser(@RequestHeader("Authorization") token: String): ResponseEntity<Any> {
         val actualToken = token.substring(7) // Remove "Bearer " prefix
-        val username = jwtUtil.getUsernameFromToken(actualToken)
-        val user = userRepository.findByUsername(username)
+        val username = jwtUtil.getUserIdFromToken(actualToken)
+        val user = userRepository.findById(username)
         return if (user.isPresent) {
             val userDTO = userMapper.toDTO(user.get())
             ResponseEntity.ok(userDTO)

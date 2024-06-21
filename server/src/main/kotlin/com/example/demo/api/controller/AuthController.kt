@@ -48,8 +48,8 @@ class AuthController {
             throw CustomException("ERR003", "User or password is not valid")
         }
 
-        val accessToken = jwtUtil.generateToken(user.username, accessTokenExpiration)
-        val refreshToken = jwtUtil.generateToken(user.username, refreshTokenExpiration)
+        val accessToken = jwtUtil.generateToken(user.id, accessTokenExpiration)
+        val refreshToken = jwtUtil.generateToken(user.id, refreshTokenExpiration)
 
         return ResponseEntity.ok(AuthResponse(accessToken, refreshToken))
     }
@@ -60,11 +60,12 @@ class AuthController {
         if (!jwtUtil.validateToken(token)) {
             throw CustomException("ERR006", "Invalid refresh token")
         }
-        val username = jwtUtil.getUsernameFromToken(token)
-        val newAccessToken = jwtUtil.generateToken(username, accessTokenExpiration)
-        val newRefreshToken = jwtUtil.generateToken(username, refreshTokenExpiration)
+        val userId = jwtUtil.getUserIdFromToken(token)
+        val newAccessToken = jwtUtil.generateToken(userId, accessTokenExpiration)
+        val newRefreshToken = jwtUtil.generateToken(userId, refreshTokenExpiration)
         return ResponseEntity.ok(AuthResponse(newAccessToken, newRefreshToken))
     }
+
 
     @DeleteMapping("/")
     fun logout(): ResponseEntity<String> {

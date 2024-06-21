@@ -145,6 +145,7 @@ export const Authorization: React.FC = () => {
                         if (
                             !localToken.current &&
                             config.headers &&
+                            sessionStorage.getItem('refreshToken') &&
                             config.url?.includes(apiPaths.TOKENS) &&
                             config.method === 'put'
                         ) {

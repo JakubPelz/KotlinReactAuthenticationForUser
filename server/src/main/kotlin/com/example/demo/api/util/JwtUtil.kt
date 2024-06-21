@@ -1,49 +1,62 @@
 package com.example.demo.api.util
 
-import io.jsonwebtoken.Claims
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
-import io.jsonwebtoken.security.Keys
+import io.jsonwebtoken.*
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.util.*
+import io.jsonwebtoken.security.Keys
+import java.security.Key
 
 @Component
 class JwtUtil {
+
+    @Value("\${jwt.secret}")
+    private lateinit var secret: String
+
+    @Value("\${jwt.access.token.expiration}")
+    private var accessTokenExpiration: Long = 0
+
+    @Value("\${jwt.refresh.token.expiration}")
+    private var refreshTokenExpiration: Long = 0
+
     private val secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256)
 
-    fun generateToken(username: String, expirationTimeInMinutes: Long): String {
+    fun generateToken(userId: Long, expirationTimeInMinutes: Long): String {
+        val claims: MutableMap<String, Any> = HashMap()
+        claims["userId"] = userId
         return Jwts.builder()
-            .setSubject(username)
-            .setIssuedAt(Date())
+            .setClaims(claims)
+            .setIssuedAt(Date(System.currentTimeMillis()))
             .setExpiration(Date(System.currentTimeMillis() + expirationTimeInMinutes * 60 * 1000))
             .signWith(secretKey)
             .compact()
     }
 
+    fun getUserIdFromToken(token: String): Long {
+        val claims = getAllClaimsFromToken(token)
+        return claims["userId"].toString().toLong()
+    }
+
     fun validateToken(token: String): Boolean {
-        return try {
-            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token)
-            true
+        try {
+            val claims = getAllClaimsFromToken(token)
+            val userId = claims["userId"]
+            return userId != null && !isTokenExpired(token)
         } catch (e: Exception) {
-            false
+            return false
         }
     }
 
-    private fun isTokenExpired(token: String): Boolean {
-        val claims = getClaimsFromToken(token)
-        return claims.expiration.before(Date())
-    }
-
-    fun getUsernameFromToken(token: String): String {
-        val claims: Claims = getClaimsFromToken(token)
-        return claims.subject
-    }
-
-    private fun getClaimsFromToken(token: String): Claims {
+    private fun getAllClaimsFromToken(token: String): Claims {
         return Jwts.parserBuilder()
             .setSigningKey(secretKey)
             .build()
             .parseClaimsJws(token)
             .body
+    }
+
+    private fun isTokenExpired(token: String): Boolean {
+        val expiration = getAllClaimsFromToken(token).expiration
+        return expiration.before(Date())
     }
 }

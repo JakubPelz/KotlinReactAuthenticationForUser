@@ -26,4 +26,10 @@ class UserService : UserDetailsService {
         return userRepository.findByUsername(username)
             .orElseThrow { UsernameNotFoundException("User not found with username: $username") }
     }
+
+    fun loadUserById(userId: Long): UserDetails {
+        val user = userRepository.findById(userId)
+            .orElseThrow { UsernameNotFoundException("User not found with ID: $userId") }
+        return org.springframework.security.core.userdetails.User(user.username, user.password, ArrayList())
+    }
 }
